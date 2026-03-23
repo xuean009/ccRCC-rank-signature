@@ -760,26 +760,25 @@ def plot_robustness(gse_stats, cptac_stats, cutoff_df):
 
 
 def build_support_files(signature, gse_stats, cptac_stats):
-    s1 = [
-        "# S1. Optimization log excerpts",
-        "",
-        "Original optimization logs are preserved below.",
-        "",
-        "## results/best_signature.txt",
-        "```",
-        base.read_text_excerpt(base.RESULTS_DIR / "best_signature.txt"),
-        "```",
-        "",
-        "## results/opt_final_best.txt",
-        "```",
-        base.read_text_excerpt(base.RESULTS_DIR / "opt_final_best.txt"),
-        "```",
-        "",
-        "## results/run_summary.txt",
-        "```",
-        base.read_text_excerpt(base.RESULTS_DIR / "run_summary.txt"),
-        "```",
+    s1 = ["# S1. Optimization log excerpts", ""]
+    log_files = [
+        base.RESULTS_DIR / "best_signature.txt",
+        base.RESULTS_DIR / "opt_final_best.txt",
+        base.RESULTS_DIR / "run_summary.txt",
     ]
+    existing_logs = [path for path in log_files if path.exists()]
+    if existing_logs:
+        s1.extend(["Original optimization logs are preserved below.", ""])
+        for path in existing_logs:
+            s1.extend([
+                "## results/{}".format(path.name),
+                "```",
+                base.read_text_excerpt(path),
+                "```",
+                "",
+            ])
+    else:
+        s1.append("No optional optimization log excerpts were found in `results/`; the package build remains reproducible without them.")
     (SUPP_DIR / "S1_optimization_log_excerpts.md").write_text("\n".join(s1) + "\n", encoding="utf-8")
 
     s2 = [

@@ -778,7 +778,25 @@ def plot_robustness(gse_stats, cptac_stats, cutoff_df):
 
 
 def build_supplementary(signature, gse_stats, cptac_stats):
-    s1_lines = ["# S1. Optimization log excerpts", "", "## results/best_signature.txt", "```", read_text_excerpt(RESULTS_DIR / "best_signature.txt"), "```", "", "## results/opt_final_best.txt", "```", read_text_excerpt(RESULTS_DIR / "opt_final_best.txt"), "```", "", "## results/run_summary.txt", "```", read_text_excerpt(RESULTS_DIR / "run_summary.txt"), "```", "", "These excerpts summarize the final selected signature and the broader optimization trajectory available in the project outputs."]
+    s1_lines = ["# S1. Optimization log excerpts", ""]
+    log_files = [
+        RESULTS_DIR / "best_signature.txt",
+        RESULTS_DIR / "opt_final_best.txt",
+        RESULTS_DIR / "run_summary.txt",
+    ]
+    existing_logs = [path for path in log_files if path.exists()]
+    if existing_logs:
+        for path in existing_logs:
+            s1_lines.extend([
+                "## results/{}".format(path.name),
+                "```",
+                read_text_excerpt(path),
+                "```",
+                "",
+            ])
+        s1_lines.append("These excerpts summarize the final selected signature and the broader optimization trajectory available in the project outputs.")
+    else:
+        s1_lines.append("No optional optimization log excerpts were found in `results/`; the figure package can still be generated without them.")
     (SUPP_DIR / "S1_optimization_log_excerpts.md").write_text("\n".join(s1_lines) + "\n", encoding="utf-8")
     s2_lines = ["# S2. Reproducibility script list and runtime settings", "", "## Primary build script", "- `scripts/_figure_base.py`", "", "## Inputs used", "- `results/best_signature_coefficients.tsv`", "- `data/TCGA_Xena/TCGA.KIRC.sampleMap/KIRC_clinicalMatrix`", "- `data/GEO/GSE29609_series_matrix.txt.gz`", "- `data/GEO/annot/GPL1708.annot.gz`", "- `data/cBioPortal/rcc_cptac_gdc/expr_genelist.tsv`", "- `data/cBioPortal/rcc_cptac_gdc/sample_to_patient.tsv`", "- `data/cBioPortal/rcc_cptac_gdc/clinical_os_gdc.tsv`", "", "## Runtime settings", "- Random seed: {}".format(SEED), "- Bootstrap resamples for C-index CI: {}".format(BOOTSTRAP_N), "- GSE29609 primary endpoint: death from cancer", "- CPTAC primary endpoint: overall survival", "- Orientation handling: choose `risk` or `-risk` by higher C-index within cohort", "- Output root: `{}`".format(OUT_DIR.relative_to(ROOT).as_posix()), "", "## Figure package generated", "- Figure 1: workflow schematic", "- Figure 2: external Kaplan-Meier curves with numbers-at-risk", "- Figure 3: discrimination summary with bootstrap CI", "- Figure 4: lollipop coefficient plot with curated category labels", "- Figure 5: orientation and cutoff robustness diagnostics"]
     (SUPP_DIR / "S2_reproducibility_script_list_and_runtime_settings.md").write_text("\n".join(s2_lines) + "\n", encoding="utf-8")
