@@ -27,7 +27,9 @@ OUTDIR.mkdir(parents=True, exist_ok=True)
 s = requests.Session()
 
 # samples & mapping
-samples = s.get(f"{BASE}/studies/{STUDY}/samples", headers=HEADERS_JSON, timeout=60).json()
+samples_resp = s.get(f"{BASE}/studies/{STUDY}/samples", headers=HEADERS_JSON, timeout=60)
+samples_resp.raise_for_status()
+samples = samples_resp.json()
 sample_ids = [x["sampleId"] for x in samples]
 sample_to_patient = {x["sampleId"]: x.get("patientId") for x in samples}
 

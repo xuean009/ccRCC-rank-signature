@@ -1,0 +1,46 @@
+{
+  "endpoints": [
+    {
+      "cohort": "Choueiri2016",
+      "study_id": "ccrcc_iatlas_choueiri_2016",
+      "study_name": "Metastatic Renal Clear Cell Carcinoma (Phase 1 Biomarker Trial, Clin Cancer Res. 2016) - iAtlas Harmonized",
+      "endpoint": "OS",
+      "n_samples": 16,
+      "n_events": 5,
+      "signature_genes_requested": 33,
+      "signature_genes_used": 33,
+      "missing_signature_genes": "",
+      "manuscript_orientation": "original",
+      "original_logrank_p": 0.11367891495561346,
+      "original_cindex": 0.7021276595744681,
+      "sign_reversed_logrank_p": 0.11367891495561315,
+      "sign_reversed_cindex": 0.2978723404255319,
+      "best_discrimination_orientation": "original",
+      "logrank_p": 0.11367891495561346,
+      "cindex": 0.7021276595744681,
+      "median_cut_high_n": 8,
+      "median_cut_low_n": 8
+    },
+    {
+      "cohort": "Choueiri2016",
+      "study_id": "ccrcc_iatlas_choueiri_2016",
+      "study_name": "Metastatic Renal Clear Cell Carcinoma (Phase 1 Biomarker Trial, Clin Cancer Res. 2016) - iAtlas Harmonized",
+      "endpoint": "PFS",
+      "n_samples": 16,
+      "n_events": 13,
+      "signature_genes_requested": 33,
+      "signature_genes_used": 33,
+      "missing_signature_genes": "",
+      "manuscript_orientation": "original",
+      "original_logrank_p": 0.6377893360747477,
+      "original_cindex": 0.44,
+      "sign_reversed_logrank_p": 0.6377893360747477,
+      "sign_reversed_cindex": 0.56,
+      "best_discrimination_orientation": "sign_reversed",
+      "logrank_p": 0.6377893360747477,
+      "cindex": 0.44,
+      "median_cut_high_n": 8,
+      "median_cut_low_n": 8
+    }
+  ]
+}

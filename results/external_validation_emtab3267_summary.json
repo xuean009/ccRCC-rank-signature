@@ -1,0 +1,18 @@
+{
+  "cohort": "E-MTAB-3267",
+  "endpoint": "PFS",
+  "n_samples": 53,
+  "n_events": 39,
+  "candidate_genes_for_ranking": 33,
+  "signature_genes_used": 33,
+  "manuscript_orientation": "original",
+  "original_logrank_p": 0.08,
+  "original_cindex": 0.6442,
+  "sign_reversed_logrank_p": 0.1368,
+  "sign_reversed_cindex": 0.3558,
+  "best_discrimination_orientation": "original",
+  "logrank_p": 0.08,
+  "cindex": 0.6442,
+  "median_cut_high_n": 27,
+  "median_cut_low_n": 26
+}

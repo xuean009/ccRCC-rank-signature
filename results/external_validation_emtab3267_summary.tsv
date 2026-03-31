@@ -1,0 +1,2 @@
+cohort	endpoint	n_samples	n_events	candidate_genes_for_ranking	signature_genes_used	manuscript_orientation	original_logrank_p	original_cindex	sign_reversed_logrank_p	sign_reversed_cindex	best_discrimination_orientation	logrank_p	cindex	median_cut_high_n	median_cut_low_n
+E-MTAB-3267	PFS	53	39	33	33	original	0.0799798120970535	0.644160583941606	0.136770441006672	0.355839416058394	original	0.0799798120970535	0.644160583941606	27	26

@@ -6,9 +6,15 @@ __pycache__/
 *.RData
 *.Rproj.user/
 *.log
+.mplconfig/
+r_lib/
 
 data/*
 !data/README.md
 
 output/*
 !output/.gitkeep
+
+results/fixed_direction_r_*
+results/*_scores.tsv
+results/external_validation_immotion150_by_arm.tsv

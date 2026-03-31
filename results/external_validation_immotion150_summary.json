@@ -1,0 +1,57 @@
+{
+  "overall": {
+    "cohort": "IMmotion150",
+    "study_id": "rcc_iatlas_immotion150_2018",
+    "study_name": "Renal Cell Carcinoma (IMmotion150 Clinical Trial, Nat Med. 2018) - iAtlas Harmonized",
+    "endpoint": "PFS",
+    "n_samples": 263,
+    "n_events": 164,
+    "candidate_genes_for_ranking": 33,
+    "signature_genes_requested": 33,
+    "signature_genes_used": 33,
+    "missing_signature_genes": "",
+    "manuscript_orientation": "original",
+    "original_logrank_p": 0.0003129352688984755,
+    "original_cindex": 0.6084694541142267,
+    "sign_reversed_logrank_p": 0.0003685486137171406,
+    "sign_reversed_cindex": 0.3915305458857733,
+    "best_discrimination_orientation": "original",
+    "logrank_p": 0.0003129352688984755,
+    "cindex": 0.6084694541142267,
+    "median_cut_high_n": 132,
+    "median_cut_low_n": 131,
+    "n_atezolizumab": 86,
+    "n_atezolizumab_bevacizumab": 88,
+    "n_sunitinib": 89,
+    "n_other_treatment": 0
+  },
+  "by_arm": [
+    {
+      "cohort": "IMmotion150",
+      "endpoint": "PFS",
+      "treatment_arm": "Atezolizumab",
+      "n_samples": 86,
+      "n_events": 51,
+      "logrank_p": NaN,
+      "cindex": NaN
+    },
+    {
+      "cohort": "IMmotion150",
+      "endpoint": "PFS",
+      "treatment_arm": "Atezolizumab+Bevacizumab",
+      "n_samples": 88,
+      "n_events": 58,
+      "logrank_p": NaN,
+      "cindex": NaN
+    },
+    {
+      "cohort": "IMmotion150",
+      "endpoint": "PFS",
+      "treatment_arm": "Sunitinib",
+      "n_samples": 89,
+      "n_events": 55,
+      "logrank_p": NaN,
+      "cindex": NaN
+    }
+  ]
+}

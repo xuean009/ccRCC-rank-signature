@@ -1,7 +1,14 @@
 #!/usr/bin/env Rscript
 
-# Continuous optimizer (rank-based) aiming for cross-platform robustness.
-# Criteria: BOTH external cohorts (GSE29609 + CPTAC) p<0.05 and C-index>=0.60.
+# Legacy exploratory optimizer retained for traceability.
+# IMPORTANT: this script reflects an earlier search-stage workflow in which
+# GSE29609 and CPTAC influenced model selection. It is preserved as an archival
+# artifact, but it is not the current Cancer Medicine external-validation pipeline for
+# the current analysis. The current manuscript starts from the frozen
+# 33-gene coefficient table in results/best_signature_coefficients.tsv, treats
+# GSE29609 as an auxiliary feature-preselection dataset only, and performs the
+# retained external validation in CPTAC, E-MTAB-1980, IMmotion150, and
+# E-MTAB-3267 via the downstream validation/package scripts.
 
 get_script_dir <- function() {
   args <- commandArgs(trailingOnly = FALSE)
@@ -30,6 +37,29 @@ suppressPackageStartupMessages({
 DIR_DATA <- file.path(ROOT, "data")
 DIR_RES  <- file.path(ROOT, "results")
 dir.create(DIR_RES, showWarnings = FALSE, recursive = TRUE)
+
+cat(
+  paste(
+    "NOTE:",
+    "scripts/06_build_rank_signature.R is an archival exploratory search script.",
+    "Use the frozen coefficient table plus scripts/10, /11, /14, and /17 for the current Cancer Medicine workflow."
+  ),
+  "\n"
+)
+
+env_flag <- function(name, default = FALSE) {
+  raw <- Sys.getenv(name, "")
+  if (!nzchar(raw)) return(isTRUE(default))
+  tolower(raw) %in% c("1", "true", "t", "yes", "y")
+}
+
+RUN_TAG <- trimws(Sys.getenv("KIRC_RUN_TAG", ""))
+ALLOW_EXTERNAL_FLIP <- env_flag("KIRC_ALLOW_EXTERNAL_FLIP", TRUE)
+
+res_path <- function(name) {
+  if (!nzchar(RUN_TAG)) return(file.path(DIR_RES, name))
+  file.path(DIR_RES, paste0(RUN_TAG, "_", name))
+}
 
 read_tsv_maybe_gz <- function(path) {
   fread(path)
@@ -82,6 +112,15 @@ orient_stats <- function(time, status, risk) {
   }
   s1$flipped <- FALSE
   s1
+}
+
+external_stats <- function(time, status, risk) {
+  if (isTRUE(ALLOW_EXTERNAL_FLIP)) {
+    return(orient_stats(time, status, risk))
+  }
+  s <- km_stats(time, status, risk)
+  s$flipped <- FALSE
+  s
 }
 
 make_risk <- function(x, coef_vec) {
@@ -301,7 +340,7 @@ for (it in seq_len(iterations)) {
         keep <- which(!is.na(st))
         if (length(unique(st[keep])) < 2) next
         risk <- make_risk(x_29609_r[keep,,drop=FALSE], coef_vec)
-        stat <- orient_stats(clin29609$time[keep], st[keep], risk)
+        stat <- external_stats(clin29609$time[keep], st[keep], risk)
         stat_disc <- ifelse(is.finite(stat$cindex), abs(stat$cindex - 0.5) + 0.5, -Inf)
         best_disc <- ifelse(is.null(best29609) || !is.finite(best29609$cindex), -Inf, abs(best29609$cindex - 0.5) + 0.5)
         if (is.null(best29609) || stat_disc > best_disc) {best29609 <- stat; bestname <- nm}
@@ -312,7 +351,7 @@ for (it in seq_len(iterations)) {
       risk_cb <- make_risk(x_cb_r, coef_vec); names(risk_cb) <- rownames(x_cb_r)
       pat <- risk_join(risk_cb)
       cbm <- merge(clin_cb, pat, by='patientId')
-      stat_cb <- orient_stats(cbm$OS_MONTHS, cbm$status, cbm$risk)
+      stat_cb <- external_stats(cbm$OS_MONTHS, cbm$status, cbm$risk)
 
       ok <- (!is.na(best29609$pval) && best29609$pval < 0.05 && !is.na(best29609$cindex) && best29609$cindex >= 0.60 &&
              !is.na(stat_cb$pval) && stat_cb$pval < 0.05 && !is.na(stat_cb$cindex) && stat_cb$cindex >= 0.60)
@@ -355,11 +394,11 @@ for (it in seq_len(iterations)) {
             ' | CPTAC p=',signif(stat_cb$pval,3),' c=',signif(stat_cb$cindex,3),' flip=',ifelse(isTRUE(stat_cb$flipped),'Y','N'),
             ' | ok=',ok,'\n', sep='')
         coef_dt <- data.table(gene=names(coef_vec), coef=as.numeric(coef_vec))
-        fwrite(coef_dt, file.path(DIR_RES,'best_signature_coefficients.tsv'), sep='\t')
-        saveRDS(best, file.path(DIR_RES,'best_signature.rds'))
-        writeLines(capture.output(str(best, max.level=2)), file.path(DIR_RES,'best_signature.txt'))
+        fwrite(coef_dt, res_path('best_signature_coefficients.tsv'), sep='\t')
+        saveRDS(best, res_path('best_signature.rds'))
+        writeLines(capture.output(str(best, max.level=2)), res_path('best_signature.txt'))
         if (isTRUE(ok)) {
-          writeLines('SUCCESS', file.path(DIR_RES,'SUCCESS.txt'))
+          writeLines('SUCCESS', res_path('SUCCESS.txt'))
           quit(save='no', status=0)
         }
       }
@@ -367,6 +406,6 @@ for (it in seq_len(iterations)) {
   }
 }
 
-saveRDS(best, file.path(DIR_RES,'last_rank_best.rds'))
+saveRDS(best, res_path('last_rank_best.rds'))
 cat('No rank-based model met thresholds in this run.\n')
 cat('DONE ', format(Sys.time(), tz='UTC', usetz=TRUE), '\n')

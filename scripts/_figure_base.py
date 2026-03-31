@@ -536,10 +536,10 @@ def build_table_2(gse_stats, cptac_stats):
             ("N", stat["n"]),
             ("Events", stat["n_events"]),
             ("Risk orientation", "Flipped (-risk)" if stat["flipped"] else "Original"),
-            ("Log-rank p", format_p(stat["pval"])),
+            ("Log-rank P", format_p(stat["pval"])),
             ("C-index", format_float(stat["cindex"])),
             ("95% bootstrap CI", format_ci(stat["cindex_low"], stat["cindex_high"])),
-            ("Threshold", "p<0.05 and C-index>=0.60"),
+            ("Threshold", "P<0.05 and C-index>=0.60"),
             ("Pass/Fail", "PASS" if stat["pass"] else "FAIL"),
         ]))
     table = pd.DataFrame(rows)
@@ -574,7 +574,7 @@ def build_table_4(gse_data, cptac_data):
                 ("Endpoint", endpoint),
                 ("Orientation", label),
                 ("N", stat["n"]),
-                ("Log-rank p", format_p(stat["pval"])),
+                ("Log-rank P", format_p(stat["pval"])),
                 ("C-index", format_float(stat["cindex"])),
             ]))
         rows.append(OrderedDict([
@@ -583,7 +583,7 @@ def build_table_4(gse_data, cptac_data):
             ("Endpoint", endpoint),
             ("Orientation", "selected"),
             ("N", chosen["n"]),
-            ("Log-rank p", format_p(chosen["pval"])),
+            ("Log-rank P", format_p(chosen["pval"])),
             ("C-index", format_float(chosen["cindex"])),
         ]))
     _, cptac_all = choose_orientation(cptac_data["OS_MONTHS"], cptac_data["OS_STATUS"], cptac_data["risk"])
@@ -594,7 +594,7 @@ def build_table_4(gse_data, cptac_data):
             ("Endpoint", "OS"),
             ("Orientation", label),
             ("N", stat["n"]),
-            ("Log-rank p", format_p(stat["pval"])),
+            ("Log-rank P", format_p(stat["pval"])),
             ("C-index", format_float(stat["cindex"])),
         ]))
     table = pd.DataFrame(rows)
@@ -619,14 +619,14 @@ def plot_workflow(tcga_primary, gse_stats, cptac_stats, signature):
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    ax.text(0.02, 0.96, "Figure 1. Study workflow", fontsize=18, fontweight="bold", va="top")
+    ax.text(0.02, 0.96, "Figure 2. Study workflow", fontsize=18, fontweight="bold", va="top")
     ax.text(0.02, 0.905, "Cross-platform construction and external validation of a 33-gene prognostic signature in clear cell renal cell carcinoma.", fontsize=11, color=PALETTE["muted"], va="top")
     draw_box(ax, (0.03, 0.54), 0.22, 0.26, "1. Data sources", wrap_label("TCGA-KIRC primary tumors (n={})\nGSE29609 microarray cohort (n={})\nCPTAC / GDC linked cohort (n={})".format(tcga_primary.shape[0], gse_stats["n"], cptac_stats["n"]), 28), "#EEF5FF")
     draw_box(ax, (0.29, 0.54), 0.22, 0.26, "2. Preprocessing", wrap_label("Probe-to-gene mapping, sample filtering, cohort-specific missing value handling, and signature score projection using final coefficients.", 28), "#F7F8EC")
     draw_box(ax, (0.55, 0.54), 0.22, 0.26, "3. Model optimization", wrap_label("Elastic-net Cox screening in discovery data, external-guided model selection, and orientation harmonization when -risk improved concordance.", 28), "#FFF3E8")
-    draw_box(ax, (0.81, 0.54), 0.16, 0.26, "4. Validation criteria", wrap_label("Primary success rule:\nlog-rank p<0.05\nand C-index>=0.60\nin both external cohorts.", 20), "#FBEAEC")
+    draw_box(ax, (0.81, 0.54), 0.16, 0.26, "4. Validation criteria", wrap_label("Primary success rule:\nlog-rank P<0.05\nand C-index>=0.60\nin both external cohorts.", 20), "#FBEAEC")
     draw_box(ax, (0.18, 0.14), 0.24, 0.22, "Final signature", wrap_label("{} genes retained\nTop coefficients: {}, {}, {}".format(signature.shape[0], signature.sort_values("abs_coef", ascending=False).iloc[0]["gene"], signature.sort_values("abs_coef", ascending=False).iloc[1]["gene"], signature.sort_values("abs_coef", ascending=False).iloc[2]["gene"]), 28), "#F2EEFA")
-    draw_box(ax, (0.48, 0.14), 0.24, 0.22, "External outcomes", wrap_label("GSE29609: p={}, C-index={}\nCPTAC: p={}, C-index={}".format(format_p(gse_stats["pval"]), format_float(gse_stats["cindex"]), format_p(cptac_stats["pval"]), format_float(cptac_stats["cindex"])), 28), "#EAF7F0")
+    draw_box(ax, (0.48, 0.14), 0.24, 0.22, "External outcomes", wrap_label("GSE29609: P={}, C-index={}\nCPTAC: P={}, C-index={}".format(format_p(gse_stats["pval"]), format_float(gse_stats["cindex"]), format_p(cptac_stats["pval"]), format_float(cptac_stats["cindex"])), 28), "#EAF7F0")
     draw_box(ax, (0.78, 0.14), 0.18, 0.22, "Submission assets", wrap_label("KM curves, discrimination summary, signature annotation, sensitivity diagnostics, and publication tables.", 22), "#EDF4F7")
     draw_arrow(ax, (0.25, 0.67), (0.29, 0.67))
     draw_arrow(ax, (0.51, 0.67), (0.55, 0.67))
@@ -636,7 +636,7 @@ def plot_workflow(tcga_primary, gse_stats, cptac_stats, signature):
     draw_arrow(ax, (0.89, 0.54), (0.87, 0.36))
     draw_arrow(ax, (0.42, 0.25), (0.48, 0.25))
     draw_arrow(ax, (0.72, 0.25), (0.78, 0.25))
-    save_figure(fig, "Figure1_study_workflow")
+    save_figure(fig, "Figure2_study_workflow")
 
 
 def plot_km_panel(fig, outer_spec, stat, title, panel_letter, xlabel):
@@ -661,7 +661,7 @@ def plot_km_panel(fig, outer_spec, stat, title, panel_letter, xlabel):
     ax.set_ylim(0, 1.02)
     ax.grid(axis="y")
     ax.legend(frameon=False, loc="lower left")
-    summary_text = "log-rank p={}   C-index={} ({})".format(format_p(stat["pval"]), format_float(stat["cindex"]), format_ci(stat["cindex_low"], stat["cindex_high"]))
+    summary_text = "log-rank P={}   C-index={} ({})".format(format_p(stat["pval"]), format_float(stat["cindex"]), format_ci(stat["cindex_low"], stat["cindex_high"]))
     orientation_text = "orientation: {}".format("flipped (-risk)" if stat["flipped"] else "original")
     ax.text(0.98, 0.10, summary_text + "\n" + orientation_text, transform=ax.transAxes, ha="right", va="bottom", fontsize=9.4, bbox=dict(boxstyle="round,pad=0.35", facecolor="white", edgecolor=PALETTE["grid"]))
     ax_tab.axis("off")
@@ -685,10 +685,10 @@ def plot_km_panel(fig, outer_spec, stat, title, panel_letter, xlabel):
 def plot_external_km(gse_stats, cptac_stats):
     fig = plt.figure(figsize=(15.5, 7.5))
     outer = gridspec.GridSpec(1, 2, figure=fig, wspace=0.18)
-    fig.suptitle("Figure 2. Kaplan-Meier curves in external validation cohorts", x=0.07, ha="left", y=0.99, fontsize=17, fontweight="bold")
+    fig.suptitle("Figure 3. Kaplan-Meier curves in external validation cohorts", x=0.07, ha="left", y=0.99, fontsize=17, fontweight="bold")
     plot_km_panel(fig, outer[0], gse_stats, "GSE29609 disease-specific survival", "A", "Time (months)")
     plot_km_panel(fig, outer[1], cptac_stats, "CPTAC overall survival", "B", "Time (months)")
-    save_figure(fig, "Figure2_external_kaplan_meier")
+    save_figure(fig, "Figure3_external_kaplan_meier")
 
 
 def plot_discrimination_summary(gse_stats, cptac_stats):
@@ -705,14 +705,14 @@ def plot_discrimination_summary(gse_stats, cptac_stats):
     ax.axhline(0.60, color=PALETTE["fail"], linestyle="--", linewidth=1.2, alpha=0.85)
     ax.text(1.02, 0.602, "Target C-index = 0.60", color=PALETTE["fail"], fontsize=9.4, va="bottom")
     for idx, row in df.iterrows():
-        ax.text(idx, row["cindex"] + 0.035, "p={}\n{}".format(format_p(row["pval"]), "PASS" if row["pass"] else "FAIL"), ha="center", va="bottom", fontsize=10, fontweight="bold", color=PALETTE["pass"] if row["pass"] else PALETTE["fail"])
-    ax.set_title("Figure 3. Discrimination summary", loc="left")
+        ax.text(idx, row["cindex"] + 0.035, "P={}\n{}".format(format_p(row["pval"]), "PASS" if row["pass"] else "FAIL"), ha="center", va="bottom", fontsize=10, fontweight="bold", color=PALETTE["pass"] if row["pass"] else PALETTE["fail"])
+    ax.set_title("Figure 4. Discrimination summary", loc="left")
     ax.set_xticks(x)
     ax.set_xticklabels(df["cohort"])
     ax.set_ylabel("Harrell's C-index")
     ax.set_ylim(0, max(df["high"].max() + 0.11, 0.78))
     ax.grid(axis="y")
-    save_figure(fig, "Figure3_discrimination_summary")
+    save_figure(fig, "Figure4_discrimination_summary")
 
 
 def plot_signature_characteristics(signature):
@@ -727,12 +727,12 @@ def plot_signature_characteristics(signature):
     ax.set_yticks(y)
     ax.set_yticklabels(df["gene"])
     ax.set_xlabel("Signature coefficient")
-    ax.set_title("Figure 4. Signature characteristics", loc="left")
+    ax.set_title("Figure 6. Signature characteristics", loc="left")
     ax.grid(axis="x")
     ax.text(0.02, 1.02, "Positive coefficients indicate higher predicted risk; colors encode curated functional category.", transform=ax.transAxes, color=PALETTE["muted"], fontsize=9.6)
     legend_handles = [plt.Line2D([0], [0], marker="o", color="w", label=label.capitalize(), markerfacecolor=color_map[label], markersize=10) for label in ("immune", "metabolic", "mixed")]
     ax.legend(handles=legend_handles, frameon=False, loc="lower right")
-    save_figure(fig, "Figure4_signature_characteristics")
+    save_figure(fig, "Figure6_signature_characteristics")
 
 
 def plot_robustness(gse_stats, cptac_stats, cutoff_df):
@@ -746,7 +746,7 @@ def plot_robustness(gse_stats, cptac_stats, cutoff_df):
         bars = ax.bar(df["orientation"], df["cindex"], color=[PALETTE["muted"], PALETTE["accent"]], width=0.58, zorder=3)
         ax.axhline(0.60, color=PALETTE["fail"], linestyle="--", linewidth=1.1)
         for bar, (_, row) in zip(bars, df.iterrows()):
-            ax.text(bar.get_x() + bar.get_width() / 2.0, row["cindex"] + 0.03, "p={}".format(format_p(row["pval"])), ha="center", fontsize=9.6)
+            ax.text(bar.get_x() + bar.get_width() / 2.0, row["cindex"] + 0.03, "P={}".format(format_p(row["pval"])), ha="center", fontsize=9.6)
         ax.set_ylim(0, max(0.85, np.nanmax(df["cindex"]) + 0.12))
         ax.set_ylabel("C-index")
         ax.set_title(title, loc="left")
@@ -760,7 +760,7 @@ def plot_robustness(gse_stats, cptac_stats, cutoff_df):
     ax_c.set_title("Cutoff sensitivity", loc="left")
     ax_c.text(-0.16, 1.08, "C", transform=ax_c.transAxes, fontsize=16, fontweight="bold")
     ax_c.set_xlabel("Risk-score cutoff quantile")
-    ax_c.set_ylabel("-log10(log-rank p)")
+    ax_c.set_ylabel("-log10(log-rank P)")
     ax_c.grid(True)
     ax_c.legend(frameon=False, loc="upper right")
     ax_d = fig.add_subplot(gs[1, 1])
@@ -798,13 +798,13 @@ def build_supplementary(signature, gse_stats, cptac_stats):
     else:
         s1_lines.append("No optional optimization log excerpts were found in `results/`; the figure package can still be generated without them.")
     (SUPP_DIR / "S1_optimization_log_excerpts.md").write_text("\n".join(s1_lines) + "\n", encoding="utf-8")
-    s2_lines = ["# S2. Reproducibility script list and runtime settings", "", "## Primary build script", "- `scripts/_figure_base.py`", "", "## Inputs used", "- `results/best_signature_coefficients.tsv`", "- `data/TCGA_Xena/TCGA.KIRC.sampleMap/KIRC_clinicalMatrix`", "- `data/GEO/GSE29609_series_matrix.txt.gz`", "- `data/GEO/annot/GPL1708.annot.gz`", "- `data/cBioPortal/rcc_cptac_gdc/expr_genelist.tsv`", "- `data/cBioPortal/rcc_cptac_gdc/sample_to_patient.tsv`", "- `data/cBioPortal/rcc_cptac_gdc/clinical_os_gdc.tsv`", "", "## Runtime settings", "- Random seed: {}".format(SEED), "- Bootstrap resamples for C-index CI: {}".format(BOOTSTRAP_N), "- GSE29609 primary endpoint: death from cancer", "- CPTAC primary endpoint: overall survival", "- Orientation handling: choose `risk` or `-risk` by higher C-index within cohort", "- Output root: `{}`".format(OUT_DIR.relative_to(ROOT).as_posix()), "", "## Figure package generated", "- Figure 1: workflow schematic", "- Figure 2: external Kaplan-Meier curves with numbers-at-risk", "- Figure 3: discrimination summary with bootstrap CI", "- Figure 4: lollipop coefficient plot with curated category labels", "- Figure 5: orientation and cutoff robustness diagnostics"]
+    s2_lines = ["# S2. Reproducibility script list and runtime settings", "", "## Primary build script", "- `scripts/_figure_base.py`", "", "## Inputs used", "- `results/best_signature_coefficients.tsv`", "- `data/TCGA_Xena/TCGA.KIRC.sampleMap/KIRC_clinicalMatrix`", "- `data/GEO/GSE29609_series_matrix.txt.gz`", "- `data/GEO/annot/GPL1708.annot.gz`", "- `data/cBioPortal/rcc_cptac_gdc/expr_genelist.tsv`", "- `data/cBioPortal/rcc_cptac_gdc/sample_to_patient.tsv`", "- `data/cBioPortal/rcc_cptac_gdc/clinical_os_gdc.tsv`", "", "## Runtime settings", "- Random seed: {}".format(SEED), "- Bootstrap resamples for C-index CI: {}".format(BOOTSTRAP_N), "- GSE29609 primary endpoint: death from cancer", "- CPTAC primary endpoint: overall survival", "- Orientation handling: choose `risk` or `-risk` by higher C-index within cohort", "- Output root: `{}`".format(OUT_DIR.relative_to(ROOT).as_posix()), "", "## Figure package generated", "- Figure 2: workflow schematic", "- Figure 3: external Kaplan-Meier curves with numbers-at-risk", "- Figure 4: discrimination summary with bootstrap CI", "- Figure 5: orientation and cutoff robustness diagnostics", "- Figure 6: lollipop coefficient plot with curated category labels"]
     (SUPP_DIR / "S2_reproducibility_script_list_and_runtime_settings.md").write_text("\n".join(s2_lines) + "\n", encoding="utf-8")
     version_df = pd.DataFrame([("python", platform.python_version()), ("pandas", pd.__version__), ("numpy", np.__version__), ("matplotlib", matplotlib.__version__), ("scipy", sys.modules["scipy"].__version__), ("platform", platform.platform())], columns=["Software / dependency", "Version"])
     version_df.to_csv(str(SUPP_DIR / "S3_software_dependency_versions.tsv"), sep="\t", index=False)
     write_markdown_table(version_df, SUPP_DIR / "S3_software_dependency_versions.md")
-    pd.DataFrame([OrderedDict([("Cohort", "GSE29609"), ("Endpoint", gse_stats["endpoint"]), ("Orientation", "Flipped (-risk)" if gse_stats["flipped"] else "Original"), ("Log-rank p", format_p(gse_stats["pval"])), ("C-index", format_float(gse_stats["cindex"])), ("95% CI", format_ci(gse_stats["cindex_low"], gse_stats["cindex_high"]))]), OrderedDict([("Cohort", "CPTAC"), ("Endpoint", cptac_stats["endpoint"]), ("Orientation", "Flipped (-risk)" if cptac_stats["flipped"] else "Original"), ("Log-rank p", format_p(cptac_stats["pval"])), ("C-index", format_float(cptac_stats["cindex"])), ("95% CI", format_ci(cptac_stats["cindex_low"], cptac_stats["cindex_high"]))])]).to_csv(str(SUPP_DIR / "summary_metrics.tsv"), sep="\t", index=False)
-    manifest_lines = ["# Submission Figure/Table Package", "", "Generated from `scripts/_figure_base.py`.", "", "## Main figures", "- `figures/Figure1_study_workflow.(png|svg)`", "- `figures/Figure2_external_kaplan_meier.(png|svg)`", "- `figures/Figure3_discrimination_summary.(png|svg)`", "- `figures/Figure4_signature_characteristics.(png|svg)`", "- `figures/Figure5_robustness_diagnostics.(png|svg)`", "", "## Main tables", "- `tables/Table1_cohort_baseline_characteristics.(tsv|md)`", "- `tables/Table2_external_validation_performance.(tsv|md)`", "- `tables/Table3_final_signature_gene_list.(tsv|md)`", "- `tables/Table4_sensitivity_analyses.(tsv|md)`", "", "## Supplementary", "- `supplementary/S1_optimization_log_excerpts.md`", "- `supplementary/S2_reproducibility_script_list_and_runtime_settings.md`", "- `supplementary/S3_software_dependency_versions.(tsv|md)`", "- `supplementary/summary_metrics.tsv`", "", "## Key validation summary", "- GSE29609: p={}, C-index={} ({})".format(format_p(gse_stats["pval"]), format_float(gse_stats["cindex"]), format_ci(gse_stats["cindex_low"], gse_stats["cindex_high"])), "- CPTAC: p={}, C-index={} ({})".format(format_p(cptac_stats["pval"]), format_float(cptac_stats["cindex"]), format_ci(cptac_stats["cindex_low"], cptac_stats["cindex_high"])), "", "## Signature overview", "- {} genes in the final coefficient table".format(signature.shape[0]), "- Strongest absolute coefficients: {}".format(", ".join(signature.sort_values("abs_coef", ascending=False).head(5)["gene"].tolist()))]
+    pd.DataFrame([OrderedDict([("Cohort", "GSE29609"), ("Endpoint", gse_stats["endpoint"]), ("Orientation", "Flipped (-risk)" if gse_stats["flipped"] else "Original"), ("Log-rank P", format_p(gse_stats["pval"])), ("C-index", format_float(gse_stats["cindex"])), ("95% CI", format_ci(gse_stats["cindex_low"], gse_stats["cindex_high"]))]), OrderedDict([("Cohort", "CPTAC"), ("Endpoint", cptac_stats["endpoint"]), ("Orientation", "Flipped (-risk)" if cptac_stats["flipped"] else "Original"), ("Log-rank P", format_p(cptac_stats["pval"])), ("C-index", format_float(cptac_stats["cindex"])), ("95% CI", format_ci(cptac_stats["cindex_low"], cptac_stats["cindex_high"]))])]).to_csv(str(SUPP_DIR / "summary_metrics.tsv"), sep="\t", index=False)
+    manifest_lines = ["# Submission Figure/Table Package", "", "Generated from `scripts/_figure_base.py`.", "", "## Main figures", "- `figures/Figure2_study_workflow.(png|svg)`", "- `figures/Figure3_external_kaplan_meier.(png|svg)`", "- `figures/Figure4_discrimination_summary.(png|svg)`", "- `figures/Figure5_robustness_diagnostics.(png|svg)`", "- `figures/Figure6_signature_characteristics.(png|svg)`", "", "## Main tables", "- `tables/Table1_cohort_baseline_characteristics.(tsv|md)`", "- `tables/Table2_external_validation_performance.(tsv|md)`", "- `tables/Table3_final_signature_gene_list.(tsv|md)`", "- `tables/Table4_sensitivity_analyses.(tsv|md)`", "", "## Supplementary", "- `supplementary/S1_optimization_log_excerpts.md`", "- `supplementary/S2_reproducibility_script_list_and_runtime_settings.md`", "- `supplementary/S3_software_dependency_versions.(tsv|md)`", "- `supplementary/summary_metrics.tsv`", "", "## Key validation summary", "- GSE29609: p={}, C-index={} ({})".format(format_p(gse_stats["pval"]), format_float(gse_stats["cindex"]), format_ci(gse_stats["cindex_low"], gse_stats["cindex_high"])), "- CPTAC: p={}, C-index={} ({})".format(format_p(cptac_stats["pval"]), format_float(cptac_stats["cindex"]), format_ci(cptac_stats["cindex_low"], cptac_stats["cindex_high"])), "", "## Signature overview", "- {} genes in the final coefficient table".format(signature.shape[0]), "- Strongest absolute coefficients: {}".format(", ".join(signature.sort_values("abs_coef", ascending=False).head(5)["gene"].tolist()))]
     (OUT_DIR / "README_submission_package.md").write_text("\n".join(manifest_lines) + "\n", encoding="utf-8")
 
 

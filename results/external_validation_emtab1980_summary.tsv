@@ -1,0 +1,2 @@
+cohort	n_samples	n_events	candidate_genes_for_ranking	signature_genes_used	manuscript_orientation	original_logrank_p	original_cindex	sign_reversed_logrank_p	sign_reversed_cindex	best_discrimination_orientation	logrank_p	cindex	median_cut_high_n	median_cut_low_n
+E-MTAB-1980	101	23	33	33	original	0.0006920394624347401	0.7462941847206386	0.00040352805406611086	0.2537058152793615	original	0.0006920394624347401	0.7462941847206386	51	50

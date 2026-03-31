@@ -29,7 +29,9 @@ OUT_EXPR = OUTDIR / "expr_genelist.tsv"
 sess = requests.Session()
 
 # expression profile: TPM
-profiles = sess.get(f"{BASE}/studies/{STUDY}/molecular-profiles", headers=H_JSON, timeout=60).json()
+profiles_resp = sess.get(f"{BASE}/studies/{STUDY}/molecular-profiles", headers=H_JSON, timeout=60)
+profiles_resp.raise_for_status()
+profiles = profiles_resp.json()
 expr_profile = None
 for p in profiles:
     pid = p.get("molecularProfileId", "")
@@ -40,7 +42,9 @@ if expr_profile is None:
     raise SystemExit("No TPM profile found")
 
 # samples (use all)
-samples = sess.get(f"{BASE}/studies/{STUDY}/samples", headers=H_JSON, timeout=60).json()
+samples_resp = sess.get(f"{BASE}/studies/{STUDY}/samples", headers=H_JSON, timeout=60)
+samples_resp.raise_for_status()
+samples = samples_resp.json()
 sample_ids = [x["sampleId"] for x in samples]
 
 # load gene list
@@ -55,8 +59,7 @@ hugo_to_entrez = {}
 page = 0
 page_size = 20000
 r = sess.get(f"{BASE}/genes", headers=H_JSON, params={"pageSize": page_size, "pageNumber": 0}, timeout=180)
-if r.status_code != 200:
-    raise SystemExit(f"Failed to list genes: {r.status_code}")
+r.raise_for_status()
 arr = r.json()
 for rec in arr:
     hugo = str(rec.get("hugoGeneSymbol", "")).upper()

@@ -1,0 +1,17 @@
+{
+  "cohort": "E-MTAB-1980",
+  "n_samples": 101,
+  "n_events": 23,
+  "candidate_genes_for_ranking": 33,
+  "signature_genes_used": 33,
+  "manuscript_orientation": "original",
+  "original_logrank_p": 0.0006920394624347401,
+  "original_cindex": 0.7462941847206386,
+  "sign_reversed_logrank_p": 0.00040352805406611086,
+  "sign_reversed_cindex": 0.2537058152793615,
+  "best_discrimination_orientation": "original",
+  "logrank_p": 0.0006920394624347401,
+  "cindex": 0.7462941847206386,
+  "median_cut_high_n": 51,
+  "median_cut_low_n": 50
+}

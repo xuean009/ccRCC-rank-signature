@@ -1,10 +1,10 @@
 # Cross-platform rank-based prognostic signature for clear cell renal cell carcinoma
 
-This repository contains the cleaned core code used to build and visualize a rank-based prognostic signature for clear cell renal cell carcinoma (ccRCC), including bulk transcriptome modeling, external validation, single-cell RNA-seq visualization, and spatial transcriptomics visualization.
+This repository contains the cleaned core code used to build and visualize a rank-based prognostic signature for clear cell renal cell carcinoma (ccRCC), including bulk transcriptome modeling, public-cohort frozen-score projection, single-cell RNA-seq visualization, and spatial transcriptomics visualization.
 
 ## Abstract
 
-Transcriptome-derived prognostic signatures for clear cell renal cell carcinoma (ccRCC) often lose performance after transfer across platforms and cohorts. We developed a 33-gene rank-based Cox signature in TCGA-KIRC and examined its transportability in GSE29609 and CPTAC using only public data. Shared genes were prefiltered by variance and inter-cohort relevance, expression values were converted to within-sample ranks during model development, and the finalized coefficient set was projected to external cohorts. In CPTAC, the original score direction showed significant overall-survival stratification with a C-index of 0.722 (95% bootstrap confidence interval [CI] 0.652-0.791; log-rank p<1e-4). In GSE29609, however, the original score direction produced inverse concordance (C-index 0.262, p=0.060), whereas a sign-reversed sensitivity analysis yielded a C-index of 0.738 (95% CI 0.599-0.849; p=0.021), indicating preserved ranking but unstable score direction. In TCGA, the signature remained independently associated with survival beyond age, pathologic stage, and grade, improving the clinicopathologic-model C-index from 0.762 to 0.812. In GSE29609, an adapted SSIGN-like clinicopathologic score based on available T/N/M stage, Fuhrman grade, and necrosis achieved a C-index of 0.794, and adding the sign-reversed signature produced only limited incremental improvement (C-index 0.803; likelihood-ratio p=0.275). These results suggest that the model captures biologically relevant prognostic structure, but score direction is not fully transportable across cohorts. The signature should therefore be interpreted as a reproducible, hypothesis-generating biomarker that requires external calibration and prospective validation before clinical deployment.
+Transcriptome-derived prognostic signatures for clear cell renal cell carcinoma (ccRCC) often lose performance after transfer across platforms and cohorts. The current Cancer Medicine revision is framed around a legacy frozen 33-gene rank-based score projected across four public cohorts spanning RNA-seq and microarray platforms and both resected and therapy-specific settings: CPTAC (n=237, overall survival), E-MTAB-1980 (n=101, overall survival), IMmotion150 (n=263, progression-free survival), and E-MTAB-3267 (n=53, progression-free survival). Archived search-stage scripts indicate that GSE29609 informed early feature filtering and CPTAC contributed to historical cross-platform model-definition constraints, so E-MTAB-1980 is treated as the primary independent overall-survival validation cohort, CPTAC as a development-linked overall-survival projection cohort, and IMmotion150 plus E-MTAB-3267 as secondary endpoint/context sensitivity cohorts. The original score direction remains associated with outcome in E-MTAB-1980 (C-index 0.746, 95% CI 0.650-0.838) and CPTAC (C-index 0.656, 95% CI 0.549-0.749), with additional directionally concordant support in IMmotion150 and E-MTAB-3267. In TCGA-KIRC, the score adds prognostic information beyond age, pathologic stage, and grade, improving the clinicopathologic-model C-index from 0.762 to 0.814 and the 1000-bootstrap optimism-corrected C-index to 0.810; in an exploratory E-MTAB-1980 benchmark, adding the score increases the clinicopathologic-model C-index from 0.804 to 0.824. These findings support cross-platform reproducibility while underscoring the need for prospective validation and external calibration before clinical deployment.
 
 ## Repository layout
 
@@ -13,12 +13,18 @@ Transcriptome-derived prognostic signatures for clear cell renal cell carcinoma 
 - `scripts/03_build_common_gene_list.R`: build the shared high-variance candidate gene list across TCGA and GSE29609.
 - `scripts/04_fetch_cptac_expression.py`: fetch CPTAC expression for the shared candidate genes through cBioPortal.
 - `scripts/05_download_cptac_gdc_clinical.py`: retrieve complete CPTAC follow-up from the GDC API.
-- `scripts/06_build_rank_signature.R`: preprocess bulk data, perform within-sample rank transformation, fit the elastic-net Cox model, and validate it in GSE29609 and CPTAC.
+- `scripts/06_build_rank_signature.R`: archival exploratory discovery script retained for traceability. It reflects the earlier search-stage optimizer in which GSE29609 and CPTAC influenced model-definition constraints and should not be treated as the current Cancer Medicine projection pipeline.
 - `scripts/07_plot_scrna_signature.R`: generate the core scRNA-seq visualizations for GSE159115.
 - `scripts/08_plot_spatial_signature.R`: generate the core spatial transcriptomics visualizations for GSE250163.
 - `scripts/_figure_base.py`: helper code for manuscript figure/table assembly.
-- `scripts/09_build_heliyon_revision_package.py`: build the final Heliyon revision figure/table package.
-- `results/best_signature_coefficients.tsv`: frozen final 33-gene coefficient table used for downstream visualization.
+- `scripts/09_build_heliyon_revision_package.py`: build the archived Heliyon revision package.
+- `scripts/10_validate_emtab1980.py`: score the frozen signature in E-MTAB-1980.
+- `scripts/11_validate_immotion150.py`: score the frozen signature in IMmotion150.
+- `scripts/14_validate_emtab3267.R`: score the frozen signature in E-MTAB-3267.
+- `scripts/15_build_frontiers_submission_package.py`: archived Frontiers package builder retained only for provenance.
+- `scripts/16_check_frontiers_consistency.py`: archived Frontiers consistency checker retained only for provenance.
+- `scripts/17_build_cancer_medicine_package.py`: build the current Cancer Medicine submission package aligned to the study hierarchy defined for this analysis.
+- `results/best_signature_coefficients.tsv`: frozen legacy 33-gene coefficient table used for downstream projection and visualization.
 
 ## Tested environment
 
@@ -47,7 +53,7 @@ Additional Python packages required by the manuscript figure builder:
 
 ## Public data sources
 
-Bulk modeling and external validation:
+Bulk modeling and prespecified Cancer Medicine frozen-score projection:
 
 - TCGA-KIRC from UCSC Xena
   - Clinical information and IlluminaHiSeq RNASeqV2 expression
@@ -74,13 +80,15 @@ Raw public datasets are not included in this repository. See [data/README.md](da
 ## Minimal run order
 
 1. Download or place public bulk data files under `data/` as described in `data/README.md`.
-2. Run `scripts/01_download_tcga_xena.R`, `scripts/02_download_cptac_cbioportal.py`, `scripts/03_build_common_gene_list.R`, `scripts/04_fetch_cptac_expression.py`, and `scripts/05_download_cptac_gdc_clinical.py` as needed.
-3. Run `scripts/06_build_rank_signature.R` to train the rank-based elastic-net Cox model and write `results/best_signature_coefficients.tsv`.
-4. Run `scripts/07_plot_scrna_signature.R` and `scripts/08_plot_spatial_signature.R` for the single-cell and spatial plots.
-5. Run `scripts/09_build_heliyon_revision_package.py` to assemble the final manuscript figure/table package under `output/heliyon_revision_package/`.
+2. Treat `results/best_signature_coefficients.tsv` as the frozen coefficient table used in the current Cancer Medicine manuscript.
+3. Run `scripts/10_validate_emtab1980.py`, `scripts/11_validate_immotion150.py`, and `scripts/14_validate_emtab3267.R` to refresh the retained projection/validation summaries used in the current Cancer Medicine manuscript if needed.
+4. Run `scripts/17_build_cancer_medicine_package.py` to assemble the current Cancer Medicine submission package under `output/cancer_medicine_submission_package/`.
+5. Use `scripts/09_build_heliyon_revision_package.py`, `scripts/15_build_frontiers_submission_package.py`, and `scripts/16_check_frontiers_consistency.py` only when you intentionally need the archived journal-specific packages retained for provenance.
 
 ## Notes
 
 - All code paths have been converted to project-relative paths.
 - Large raw data files, temporary outputs, and intermediate analysis products are intentionally excluded from version control.
-- `results/best_signature_coefficients.tsv` is included because it is a small derived artifact required by the downstream visualization scripts and the final manuscript package.
+- `r_lib/` and `.mplconfig/` are optional local runtime caches and are intentionally excluded from version control; the scripts still fall back to the system R/Python environments when those directories are absent.
+- `results/best_signature_coefficients.tsv` is included because it is a small derived artifact required by the downstream validation scripts and the final manuscript package.
+- Ancillary exploratory files for GSE29609 and Choueiri2016 remain in the repository for provenance, but they are not part of the retained external-validation hierarchy described in the current Cancer Medicine analysis.

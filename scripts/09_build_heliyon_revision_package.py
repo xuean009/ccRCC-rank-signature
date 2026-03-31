@@ -71,7 +71,7 @@ def ensure_dirs():
 def set_style():
     plt.rcParams.update({
         "figure.dpi": 180,
-        "savefig.dpi": 500,
+        "savefig.dpi": 600,
         "savefig.bbox": "tight",
         "font.family": "DejaVu Sans",
         "font.size": 10.4,
@@ -411,7 +411,7 @@ def plot_workflow(signature, tcga_primary, gse_stats, cptac_stats):
     fig.patch.set_facecolor("white")
 
     # ── Title block ──────────────────────────────────────────────────
-    ax.text(0.50, 0.975, "Figure 1.  Cross-platform prognostic modeling workflow",
+    ax.text(0.50, 0.975, "Figure 2.  Cross-platform prognostic modeling workflow",
             fontsize=17.5, fontweight="bold", va="top", ha="center",
             color=COLORS["ink"])
     ax.text(0.50, 0.946, "Vertical timeline from cohort assembly to transportability assessment",
@@ -546,7 +546,7 @@ def plot_workflow(signature, tcga_primary, gse_stats, cptac_stats):
             fontsize=9.2, color=COLORS["mauve"], va="center",
             fontweight="bold", zorder=4)
 
-    base.save_figure(fig, "Figure1_study_workflow")
+    base.save_figure(fig, "Figure2_study_workflow")
 
 
 def km_panel(fig, spec, stat, title, tag):
@@ -608,10 +608,10 @@ def km_panel(fig, spec, stat, title, tag):
 def plot_external_km(gse_stats, cptac_stats):
     fig = plt.figure(figsize=(16.2, 8.6))
     outer = gridspec.GridSpec(1, 2, figure=fig, wspace=0.20)
-    fig.suptitle("Figure 2. External survival stratification plots", x=0.06, y=0.99, ha="left", fontsize=18, fontweight="bold")
+    fig.suptitle("Figure 3. External survival stratification plots", x=0.06, y=0.99, ha="left", fontsize=18, fontweight="bold")
     km_panel(fig, outer[0], gse_stats, "GSE29609 disease-specific survival (sign-reversed sensitivity)", "A")
     km_panel(fig, outer[1], cptac_stats, "CPTAC overall survival", "B")
-    base.save_figure(fig, "Figure2_external_kaplan_meier")
+    base.save_figure(fig, "Figure3_external_kaplan_meier")
 
 
 def plot_discrimination_summary(gse_stats, cptac_stats):
@@ -632,10 +632,10 @@ def plot_discrimination_summary(gse_stats, cptac_stats):
     ax.set_yticklabels(df["cohort"])
     ax.set_xlim(0.52, max(df["high"]) + 0.10)
     ax.set_xlabel("Harrell's C-index")
-    ax.set_title("Figure 3. Sensitivity-adjusted discrimination summary", loc="left")
+    ax.set_title("Figure 4. Sensitivity-adjusted discrimination summary", loc="left")
     ax.grid(axis="x")
     soften(ax)
-    base.save_figure(fig, "Figure3_discrimination_summary")
+    base.save_figure(fig, "Figure4_discrimination_summary")
 
 
 def plot_signature_characteristics(signature):
@@ -650,7 +650,7 @@ def plot_signature_characteristics(signature):
     ax_cat = fig.add_subplot(inner[1], sharey=ax)
 
     ax_head.axis("off")
-    ax_head.text(0.00, 0.88, "Figure 5. Coefficient architecture of the final signature", fontsize=15.8, fontweight="bold", va="top")
+    ax_head.text(0.00, 0.88, "Figure 6. Coefficient architecture of the final signature", fontsize=15.8, fontweight="bold", va="top")
     ax_head.text(0.00, 0.28, "Coefficient direction is shown at left; curated immune/metabolic labels are isolated in a separate right-hand annotation column.", fontsize=9.5, color=COLORS["muted"], va="top")
     ax_head.text(0.89, 0.28, "Category", fontsize=10.4, fontweight="bold", va="top", ha="center")
 
@@ -683,7 +683,7 @@ def plot_signature_characteristics(signature):
     for idx, row in df.iterrows():
         ax_cat.text(0.14, idx, row["category"].capitalize(), va="center", fontsize=8.9, color=cat_colors[row["category"]])
 
-    base.save_figure(fig, "Figure5_signature_characteristics")
+    base.save_figure(fig, "Figure6_signature_characteristics")
 
 
 def robust_orientation_panel(fig, spec, stat, title, tag):
@@ -718,7 +718,7 @@ def robust_orientation_panel(fig, spec, stat, title, tag):
 def plot_robustness(gse_stats, cptac_stats, cutoff_df):
     fig = plt.figure(figsize=(15.0, 10.5))
     gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.34, wspace=0.22)
-    fig.suptitle("Figure 4. Robustness diagnostics", x=0.06, y=0.99, ha="left", fontsize=18, fontweight="bold")
+    fig.suptitle("Figure 5. Robustness diagnostics", x=0.06, y=0.99, ha="left", fontsize=18, fontweight="bold")
 
     robust_orientation_panel(fig, gs[0, 0], gse_stats, "GSE29609 orientation handling", "A")
     robust_orientation_panel(fig, gs[0, 1], cptac_stats, "CPTAC orientation handling", "B")
@@ -756,7 +756,7 @@ def plot_robustness(gse_stats, cptac_stats, cutoff_df):
     soften(ax_d)
     ax_d.legend(frameon=False, loc="upper left")
 
-    base.save_figure(fig, "Figure4_robustness_diagnostics")
+    base.save_figure(fig, "Figure5_robustness_diagnostics")
 
 
 def build_support_files(signature, gse_stats, cptac_stats):
