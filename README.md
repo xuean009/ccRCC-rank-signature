@@ -2,6 +2,19 @@
 
 This repository contains the cleaned core code used to build and visualize a rank-based prognostic signature for clear cell renal cell carcinoma (ccRCC), including bulk transcriptome modeling, public-cohort frozen-score projection, single-cell RNA-seq visualization, and spatial transcriptomics visualization.
 
+## Public summary
+
+This repository packages the research code behind a kidney-cancer prognosis study. In simple terms, the project asks whether a gene-expression risk score for clear cell renal cell carcinoma can still carry useful prognostic information after it is moved across different public datasets, platforms, and clinical settings.
+
+Instead of relying on absolute expression values, the retained model uses within-sample gene ranks, which makes the score less sensitive to platform-specific scaling differences. The current public-facing workflow starts from a frozen 33-gene coefficient table and projects that locked score into multiple public cohorts rather than retraining the model in each dataset.
+
+For most readers, the main takeaways are:
+
+- this is a reproducibility-oriented research repository, not a clinical software package
+- the strongest independent overall-survival support in the current analysis comes from `E-MTAB-1980`
+- `CPTAC`, `IMmotion150`, and `E-MTAB-3267` are included to test transportability across additional public settings, but they play different inferential roles
+- the current manuscript-oriented build entry point is `scripts/17_build_cancer_medicine_package.py`
+
 ## Abstract
 
 Transcriptome-derived prognostic signatures for clear cell renal cell carcinoma (ccRCC) often lose performance after transfer across platforms and cohorts. The current Cancer Medicine revision is framed around a legacy frozen 33-gene rank-based score projected across four public cohorts spanning RNA-seq and microarray platforms and both resected and therapy-specific settings: CPTAC (n=237, overall survival), E-MTAB-1980 (n=101, overall survival), IMmotion150 (n=263, progression-free survival), and E-MTAB-3267 (n=53, progression-free survival). Archived search-stage scripts indicate that GSE29609 informed early feature filtering and CPTAC contributed to historical cross-platform model-definition constraints, so E-MTAB-1980 is treated as the primary independent overall-survival validation cohort, CPTAC as a development-linked overall-survival projection cohort, and IMmotion150 plus E-MTAB-3267 as secondary endpoint/context sensitivity cohorts. The original score direction remains associated with outcome in E-MTAB-1980 (C-index 0.746, 95% CI 0.650-0.838) and CPTAC (C-index 0.656, 95% CI 0.549-0.749), with additional directionally concordant support in IMmotion150 and E-MTAB-3267. In TCGA-KIRC, the score adds prognostic information beyond age, pathologic stage, and grade, improving the clinicopathologic-model C-index from 0.762 to 0.814 and the 1000-bootstrap optimism-corrected C-index to 0.810; in an exploratory E-MTAB-1980 benchmark, adding the score increases the clinicopathologic-model C-index from 0.804 to 0.824. These findings support cross-platform reproducibility while underscoring the need for prospective validation and external calibration before clinical deployment.
